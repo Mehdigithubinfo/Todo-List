@@ -1,10 +1,51 @@
-<h2>Todo list</h2>
-<ul>
-  @for (todo of todos; track todo) {
-  <li [style.background]="todo.completed ? 'red' : 'green'">
-    <span [style.text-decoration]="todo.completed ? 'line-through' : 'none'"
-      >{{ $index + 1 }}) {{ todo.title }}</span
+<!-- todo.component.html -->
+<div class="todo-container">
+  <h2>Todo List</h2>
+
+  <div class="stats">
+    <span>Total: {{ todos().length }}</span>
+    <span>Completed: {{ completedCount() }}</span>
+    <span>Pending: {{ pendingCount() }}</span>
+  </div>
+
+  <div class="add-todo">
+    <input
+      type="text"
+      [value]="newTodo()"
+      (input)="updateNewTodo($event)"
+      (keyup.enter)="addTodo()"
+      placeholder="Enter new todo"
+      #todoInput
+    />
+    <button (click)="addTodo()" [disabled]="!newTodo().trim()">Add</button>
+  </div>
+
+  <ul class="todo-list">
+    @for (todo of todos(); track todo.id; let i = $index) {
+    <li
+      class="todo-item"
+      [class.completed]="todo.completed"
+      [class.pending]="!todo.completed"
     >
-  </li>
-  }
-</ul>
+      <div class="todo-content">
+        <input
+          type="checkbox"
+          [checked]="todo.completed"
+          (change)="toggleTodo(todo.id)"
+          class="todo-checkbox"
+        />
+        <span class="todo-title"> {{ i + 1 }}) {{ todo.title }} </span>
+      </div>
+      <button
+        class="delete-btn"
+        (click)="deleteTodo(todo.id)"
+        aria-label="Delete todo"
+      >
+        ×
+      </button>
+    </li>
+    } @empty {
+    <li class="empty-state">No todos yet. Add one above!</li>
+    }
+  </ul>
+</div>
