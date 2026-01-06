@@ -1,2 +1,10 @@
-<h2>Todo App</h2>
-<p>Todo feature works!</p>
+<h2>Todo list</h2>
+<ul>
+  @for (todo of todos; track todo) {
+  <li [style.background]="todo.completed ? 'red' : 'green'">
+    <span [style.text-decoration]="todo.completed ? 'line-through' : 'none'"
+      >{{ $index + 1 }}) {{ todo.title }}</span
+    >
+  </li>
+  }
+</ul>
