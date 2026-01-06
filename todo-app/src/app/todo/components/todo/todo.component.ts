@@ -9,10 +9,7 @@ import { Todo } from '../../models/todo.model';
 })
 export class TodoComponent {
   // Using signals for reactive state management
-  todos = signal<Todo[]>([
-    { id: 1, title: 'Learn Angular 20', completed: true },
-    { id: 2, title: 'Build Todo App', completed: false },
-  ]);
+  todos = signal<Todo[]>([]);
 
   // Signal for new todo input
   newTodo = signal('');
@@ -22,9 +19,41 @@ export class TodoComponent {
     () => this.todos().filter((todo) => todo.completed).length
   );
 
-  pendingCount = computed(
+  workingCount = computed(
     () => this.todos().filter((todo) => !todo.completed).length
   );
+
+  // ✅ اضافه کردن progressPercentage
+  progressPercentage = computed(() => {
+    const total = this.todos().length;
+    const completed = this.completedCount();
+
+    // جلوگیری از تقسیم بر صفر
+    if (total === 0) {
+      return 0;
+    }
+
+    // محاسبه درصد
+    return Math.round((completed / total) * 100);
+  });
+
+  // ✅ برای نمایش گرافیکی progress bar
+  progressBarWidth = computed(() => `${this.progressPercentage()}%`);
+
+  // ✅ وضعیت بر اساس درصد
+  progressStatus = computed(() => {
+    const percentage = this.progressPercentage();
+
+    if (percentage === 0) {
+      return 'not-started';
+    } else if (percentage < 50) {
+      return 'in-progress';
+    } else if (percentage < 100) {
+      return 'almost-done';
+    } else {
+      return 'completed';
+    }
+  });
 
   // Update the newTodo signal
   updateNewTodo(event: Event): void {
@@ -37,7 +66,7 @@ export class TodoComponent {
     const title = this.newTodo().trim();
     if (title) {
       const newTodo: Todo = {
-        id: this.todos().length + 1,
+        id: Date.now(),
         title: title,
         completed: false,
       };

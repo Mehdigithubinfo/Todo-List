@@ -5,7 +5,40 @@
   <div class="stats">
     <span>Total: {{ todos().length }}</span>
     <span>Completed: {{ completedCount() }}</span>
-    <span>Pending: {{ pendingCount() }}</span>
+    <span>Working: {{ workingCount() }}</span>
+    <!-- ✅ اضافه کردن progress percentage -->
+    <span>Progress: {{ progressPercentage() }}%</span>
+  </div>
+
+  <!-- ✅ Progress Bar Section -->
+  <div class="progress-section">
+    <div class="progress-info">
+      <span class="progress-text">Progress: {{ progressPercentage() }}%</span>
+      <span class="progress-details">
+        ({{ completedCount() }}/{{ todos().length }})
+      </span>
+    </div>
+
+    <div class="progress-bar-container">
+      <div
+        class="progress-bar"
+        [style.width]="progressBarWidth()"
+        [class]="progressStatus()"
+      ></div>
+    </div>
+
+    <!-- ✅ Progress Message -->
+    <div class="progress-message" [class]="progressStatus() + '-message'">
+      @switch (progressStatus()) { @case ('not-started') {
+      <span>📝 Let's get started! Add your first todo.</span>
+      } @case ('in-progress') {
+      <span>🚀 You're making progress! Keep going!</span>
+      } @case ('almost-done') {
+      <span>🎯 Almost there! Finish strong!</span>
+      } @case ('completed') {
+      <span>🎉 All done! Great job!</span>
+      } }
+    </div>
   </div>
 
   <div class="add-todo">
